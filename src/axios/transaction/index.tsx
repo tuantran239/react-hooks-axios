@@ -16,7 +16,7 @@ type FunctionTransaction<T> = () => [
 ];
 
 export const useTransaction: FunctionTransaction<Return> = () => {
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<any>(null);
   const [loading, setLoading] = useState(false);
 
   const { axios,  mutationAsyncThrowError } = useMutation();
@@ -30,7 +30,7 @@ export const useTransaction: FunctionTransaction<Return> = () => {
     try {
       await onRun(new Transaction(axios, query, mutation));
       setLoading(false);
-    } catch (error: any) {
+    } catch (error) {
       setLoading(false);
       setError(error);
       if (onError) {

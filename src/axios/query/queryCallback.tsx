@@ -36,9 +36,9 @@ const QueryCallback: QueryFunctionCallback = (
       })
       .catch((error) => {
         setLoading(false);
-        setError(error.response?.data);
+        setError(error);
         if (onError) {
-          onError(error.response?.data);
+          onError(error);
         }
       });
   };
