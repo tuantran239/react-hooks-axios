@@ -4,7 +4,7 @@ import returnAxios from '../returnAxios'
 import { FunctionCallback, FunctionCallbackReturn, ArgsCallback } from '../base'
 
 interface Args extends ArgsCallback<MutationMethod> {
-  body: any
+  body?: any
 }
 
 export type MutationFunctionCallback = FunctionCallback<MutationMethod, Args>
@@ -45,7 +45,7 @@ const MutationCallback: MutationFunctionCallback = (
           }
         })
     } else {
-      axios[method ?? 'post'](urlAxios, body ?? {}, config)
+      axios[method ?? 'post'](urlAxios, body || {}, config)
         .then(({ data }) => {
           setLoading(false)
           setData(data)

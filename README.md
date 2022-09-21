@@ -8,7 +8,31 @@ Use npm to install react-hooks-axios.
 npm install react-hooks-axios
 ```
 
-## Update new version v0.2.0
+## Update new version v0.3.0
+update url argument in callback hooks
+```typescript
+import { useMutation } from "react-hooks-axios";
+const { mutationCallback } = useMutation();
+const [createPost, { loading, data, error }] = mutationCallback();
+
+ const createPostHandler = () => {
+  createPost({
+    method: "post", /* post | put | patch | delete */
+    url: "/posts", //update url argument
+    body: {
+      id: 2,
+      title: "post1",
+      author: "author1",
+    },
+    onCompleted(data) {
+      console.log(data);
+    },
+    onError(error) {
+      console.log(error);
+    },
+  });
+ };
+```
 
 ## Usage
 
