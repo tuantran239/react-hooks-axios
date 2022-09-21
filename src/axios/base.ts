@@ -25,7 +25,7 @@ export interface ArgsCallback<T> {
 export type FunctionCallbackReturn<T> = (args: T) => void
 
 export type FunctionCallback<K, T extends ArgsCallback<K>> = (
-  url: string,
+  urlArg?: string,
   config?: AxiosRequestConfig
 ) => [
   func: FunctionCallbackReturn<T>,
