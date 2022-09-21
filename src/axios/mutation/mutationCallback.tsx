@@ -1,71 +1,69 @@
-import { useState } from "react";
-import { AxiosReqConfig, MutationMethod } from "../base";
-import returnAxios from "../returnAxios";
-import {
-  FunctionCallback,
-  FunctionCallbackReturn,
-  ArgsCallback,
-} from "../base";
+import { useState } from 'react'
+import { AxiosReqConfig, MutationMethod } from '../base'
+import returnAxios from '../returnAxios'
+import { FunctionCallback, FunctionCallbackReturn, ArgsCallback } from '../base'
 
 interface Args extends ArgsCallback<MutationMethod> {
-  body: any;
+  body: any
 }
 
-export type MutationFunctionCallback = FunctionCallback<MutationMethod, Args>;
+export type MutationFunctionCallback = FunctionCallback<MutationMethod, Args>
 
 const MutationCallback: MutationFunctionCallback = (
-  url: string,
+  urlArg?: string,
   config?: AxiosReqConfig
 ) => {
-  const axios = returnAxios();
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<any>(null);
-  const [data, setData] = useState(null);
+  const axios = returnAxios()
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<any>(null)
+  const [data, setData] = useState(null)
 
   const mutationFunc: FunctionCallbackReturn<Args> = ({
     method,
+    url,
     body,
     onCompleted,
     onError,
   }) => {
-    setLoading(true);
-    if (method && method === "delete") {
+    setLoading(true)
+    const urlAxios = urlArg ? urlArg : url ? url : ''
+    if (method && method === 'delete') {
       axios
-        .delete(url, config)
+        .delete(urlAxios, config)
         .then(({ data }) => {
-          setLoading(false);
-          setData(data);
+          setLoading(false)
+          setData(data)
           if (onCompleted) {
-            onCompleted(data);
+            onCompleted(data)
           }
         })
         .catch((error) => {
-          setLoading(false);
-          setError(error);
+          setLoading(false)
+          setError(error)
           if (onError) {
-            onError(error);
+            onError(error)
           }
-        });
+        })
     } else {
-      axios[method ?? "post"](url, body ?? {}, config)
+      axios[method ?? 'post'](urlAxios, body ?? {}, config)
         .then(({ data }) => {
-          setLoading(false);
-          setData(data);
+          setLoading(false)
+          setData(data)
           if (onCompleted) {
-            onCompleted(data);
+            onCompleted(data)
           }
         })
         .catch((error) => {
-          setLoading(false);
-          setError(error);
+          setLoading(false)
+          setError(error)
           if (onError) {
-            onError(error);
+            onError(error)
           }
-        });
+        })
     }
-  };
+  }
 
-  return [mutationFunc, { loading, data, error }];
-};
+  return [mutationFunc, { loading, data, error }]
+}
 
-export default MutationCallback;
+export default MutationCallback

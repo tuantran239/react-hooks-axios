@@ -1,49 +1,50 @@
-import { useState } from "react";
-import { AxiosReqConfig, QueryMethod } from "../base";
-import returnAxios from "../returnAxios";
-import {
-  FunctionCallback,
-  FunctionCallbackReturn,
-  ArgsCallback,
-} from "../base";
+import { useState } from 'react'
+import { AxiosReqConfig, QueryMethod } from '../base'
+import returnAxios from '../returnAxios'
+import { FunctionCallback, FunctionCallbackReturn, ArgsCallback } from '../base'
 
 export type QueryFunctionCallback = FunctionCallback<
   QueryMethod,
   ArgsCallback<QueryMethod>
->;
+>
 
 const QueryCallback: QueryFunctionCallback = (
-  url: string,
+  urlArg?: string,
   config?: AxiosReqConfig
 ) => {
-  const axios = returnAxios();
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<any>(null);
-  const [data, setData] = useState(null);
+  const axios = returnAxios()
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<any>(null)
+  const [data, setData] = useState(null)
 
   const queryFunc: FunctionCallbackReturn<ArgsCallback<QueryMethod>> = ({
+    url,
     onCompleted,
     onError,
   }) => {
-    setLoading(true);
-    axios.get(url, config)
+    setLoading(true)
+
+    const urlAxios = urlArg ? urlArg : url ? url : ''
+
+    axios
+      .get(urlAxios, config)
       .then(({ data }) => {
-        setLoading(false);
-        setData(data);
+        setLoading(false)
+        setData(data)
         if (onCompleted) {
-          onCompleted(data);
+          onCompleted(data)
         }
       })
       .catch((error) => {
-        setLoading(false);
-        setError(error);
+        setLoading(false)
+        setError(error)
         if (onError) {
-          onError(error);
+          onError(error)
         }
-      });
-  };
+      })
+  }
 
-  return [queryFunc, { loading, data, error }];
-};
+  return [queryFunc, { loading, data, error }]
+}
 
-export default QueryCallback;
+export default QueryCallback
