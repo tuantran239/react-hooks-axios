@@ -4,9 +4,7 @@ import {
   AxiosRequestHeaders,
 } from 'axios'
 
-export type QueryMethod = 'get'
-
-export type MutationMethod = 'post' | 'put' | 'patch' | 'delete'
+export type Method = 'post' | 'put' | 'patch' | 'delete' | 'get'
 
 export interface AxiosReqConfig {
   baseURL?: string
@@ -17,7 +15,7 @@ export interface AxiosReqConfig {
 
 export interface ArgsCallback<T> {
   url?: string
-  method?: T
+  method: T
   onCompleted?: (data: any) => void
   onError?: (error: any) => void
 }

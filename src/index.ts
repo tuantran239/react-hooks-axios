@@ -1,6 +1,5 @@
-export { AxiosProvider } from "./axios";
-export { useMutation } from "./axios/mutation";
-export { useQuery } from "./axios/query";
-export { useTransaction } from "./axios/transaction";
+export { AxiosProvider } from './axios'
+export { useAxios } from './axios/main'
+export { useAxiosMulti } from './axios/mutil'
 export { AxiosReqConfig } from './axios/base'
-export { axios } from './axios/axios';
+export { axios } from './axios/axios'

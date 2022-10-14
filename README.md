@@ -7,34 +7,7 @@ Use npm to install react-hooks-axios.
 ```bash
 npm install react-hooks-axios
 ```
-
-## Update new version v0.3.0
-update url argument in callback hooks
-```typescript
-import { useMutation } from "react-hooks-axios";
-const { mutationCallback } = useMutation();
-const [createPost, { loading, data, error }] = mutationCallback();
-
- const createPostHandler = () => {
-  createPost({
-    method: "post", /* post | put | patch | delete */
-    url: "/posts", //update url argument
-    body: {
-      id: 2,
-      title: "post1",
-      author: "author1",
-    },
-    onCompleted(data) {
-      console.log(data);
-    },
-    onError(error) {
-      console.log(error);
-    },
-  });
- };
-```
-
-## Usage
+## Usage (New version v1.0.0)
 
 index.tsx
 
@@ -50,127 +23,85 @@ root.render(
 );
 ```
 ## Hooks 
-useQuery(): get data
+useAxios(): get, post, put, path, delete data
 
-useMutation(): post, put, path or delete data
+useAxiosMulti(): multi axios
 
-useTransaction(): group query, mutation in one transaction
-
-## useQuery()
-
-
+## useAxios()
 
 ```typescript
-import { useQuery } from "react-hooks-axios";
 
- /* use query */
- const { query } = useQuery();
- const { loading, data, error } = query("/posts");
- console.log(loading);
- console.log(data);
- console.log(error);
+/* use with callback */
+ import { useAxios } from 'react-hooks-axios'
 
-
- /* use with callback */
- const { queryCallback } = useQuery();
- const [fetchPosts, { loading, data, error }] = queryCallback("/posts");
-
- console.log(loading);
- console.log(data);
- console.log(error);
-
- useEffect(() => {
-  fetchPosts({
-    onCompleted(data) {
-      console.log(data);
-    },
-    onError(error) {
-      console.log(error);
-    },
-  });
- }, []);
-
-
- /* use with async */
- const { queryAsyncReturnError } = useQuery();
-
- useEffect(() => {
-  const fetchPosts = async () => {
-    const { data, error } = await queryAsyncReturnError("/posts");
-    if (error) {
-      return;
-    }
-    console.log(data);
-  };
-  fetchPosts();
- }, []);
-
-```
-
-## useMutation()
-```typescript
-import { useMutation } from "react-hooks-axios";
-
- /* use with callback */
- const { mutationCallback } = useMutation();
- const [createPost, { loading, data, error }] = 
- mutationCallback("/posts");
-
- console.log(loading);
- console.log(data);
- console.log(error);
+ const { axiosCallback } = useAxios()
+ const [createPost, { loading, data, error }] = axiosCallback()
 
  const createPostHandler = () => {
   createPost({
-    method: "post", /* post | put | patch | delete */
+    method: 'post' /* get | post | put | patch | delete */,
+    url: '/posts', //update url argument
     body: {
       id: 2,
-      title: "post1",
-      author: "author1",
+      title: 'post1',
+      author: 'author1',
     },
     onCompleted(data) {
-      console.log(data);
+      console.log(data)
     },
     onError(error) {
-      console.log(error);
+      console.log(error)
     },
-  });
- };
+  })
+ }
 
  /* use with async */
- const { mutationAsyncReturnError } = useMutation();
+ const { asyncReturn, asyncThrow } = useAxios()
 
- const createPostHandler = async () => {
-  const body = {
-    id: 3,
-    title: "post2",
-    author: "author2",
-  };
-  const { data, error } = await mutationAsyncReturnError("/posts", "post", body);
-  if (error) {
-    return;
+ // asyncReturn
+ useEffect(() => {
+  const fetchPosts = async () => {
+    const { data, error } = await asyncReturn('/posts')
+    if (error) {
+      return
+    }
+    console.log(data)
   }
-  console.log(data);
- };
+  fetchPosts()
+ }, [])
+
+ // asyncThrow
+ useEffect(() => {
+  const fetchPosts = async () => {
+    try {
+      const { data } = await asyncThrow('/posts')
+      console.log(data)
+    } catch (error) {
+      return
+    }
+  }
+  fetchPosts()
+ }, [])
+
 ```
 
-## useTransaction()
+## useAxiosMulti()
 ```typescript
- import { useTransaction } from "react-hooks-axios";
+ import { useAxiosMulti } from "react-hooks-axios";
 
- const [onTransaction, { loading }] = useTransaction();
+ const [onHandle, { loading }] = useAxiosMulti();
 
  const clickHandler = async () => {
-  onTransaction({
-    async onRun({ mutation, query }) {
+  onHandle({
+    async onRun(axios) {
       const body = {
         id: 4,
         title: "post3",
         author: "author2",
       };
-      await mutation("/posts", "post", body);
-      await mutation("/posts/4", "patch", { author: "author1" });
-      const posts = await query("/posts");
+      await axios("/posts", "post", body);
+      await axios("/posts/4", "patch", { author: "author1" });
+      const posts = await axios("/posts", "get");
       console.log(posts);
     },
     onError(error) {

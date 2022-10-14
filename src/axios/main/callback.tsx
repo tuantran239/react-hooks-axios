@@ -1,15 +1,15 @@
 import { useState } from 'react'
-import { AxiosReqConfig, MutationMethod } from '../base'
+import { AxiosReqConfig, Method } from '../base'
 import returnAxios from '../returnAxios'
 import { FunctionCallback, FunctionCallbackReturn, ArgsCallback } from '../base'
 
-interface Args extends ArgsCallback<MutationMethod> {
+interface Args extends ArgsCallback<Method> {
   body?: any
 }
 
-export type MutationFunctionCallback = FunctionCallback<MutationMethod, Args>
+export type AxiosFunctionCallback = FunctionCallback<Method, Args>
 
-const MutationCallback: MutationFunctionCallback = (
+const Callback: AxiosFunctionCallback = (
   urlArg?: string,
   config?: AxiosReqConfig
 ) => {
@@ -18,7 +18,7 @@ const MutationCallback: MutationFunctionCallback = (
   const [error, setError] = useState<any>(null)
   const [data, setData] = useState(null)
 
-  const mutationFunc: FunctionCallbackReturn<Args> = ({
+  const axiosFunc: FunctionCallbackReturn<Args> = ({
     method,
     url,
     body,
@@ -27,9 +27,8 @@ const MutationCallback: MutationFunctionCallback = (
   }) => {
     setLoading(true)
     const urlAxios = urlArg ? urlArg : url ? url : ''
-    if (method && method === 'delete') {
-      axios
-        .delete(urlAxios, config)
+    if (method === 'delete' || method === 'get') {
+      axios[method](urlAxios, config)
         .then(({ data }) => {
           setLoading(false)
           setData(data)
@@ -45,7 +44,7 @@ const MutationCallback: MutationFunctionCallback = (
           }
         })
     } else {
-      axios[method ?? 'post'](urlAxios, body || {}, config)
+      axios[method](urlAxios, body || {}, config)
         .then(({ data }) => {
           setLoading(false)
           setData(data)
@@ -63,7 +62,7 @@ const MutationCallback: MutationFunctionCallback = (
     }
   }
 
-  return [mutationFunc, { loading, data, error }]
+  return [axiosFunc, { loading, data, error }]
 }
 
-export default MutationCallback
+export default Callback
