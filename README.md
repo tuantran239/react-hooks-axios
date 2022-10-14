@@ -7,7 +7,7 @@ Use npm to install react-hooks-axios.
 ```bash
 npm install react-hooks-axios
 ```
-## Usage (New version v1.0.0)
+## Usage (New version v0.4.0)
 
 index.tsx
 
