@@ -61,7 +61,7 @@ useAxiosMulti(): multi axios
  // asyncReturn
  useEffect(() => {
   const fetchPosts = async () => {
-    const { data, error } = await asyncReturn('/posts')
+    const { data, error } = await asyncReturn('/posts', 'get')
     if (error) {
       return
     }
@@ -74,7 +74,7 @@ useAxiosMulti(): multi axios
  useEffect(() => {
   const fetchPosts = async () => {
     try {
-      const { data } = await asyncThrow('/posts')
+      const { data } = await asyncThrow('/posts', 'get')
       console.log(data)
     } catch (error) {
       return
