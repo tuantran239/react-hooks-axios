@@ -1,0 +1,12 @@
+name: react-hooks-axios
+
+on:
+  push:
+    branches: ['master']
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - run: npm run build
+      - run: npm publish ./dist
